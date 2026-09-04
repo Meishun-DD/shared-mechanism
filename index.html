@@ -54,7 +54,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--topbar-h) + 52px); }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--topbar-h) + 40px + 10px); }
 
 body {
   font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -79,24 +79,26 @@ body {
 }
 
 /* ===== 顶部导航栏 ===== */
+/* ===== 顶部双层固定导航 ===== */
+/* 第一层：顶栏（搜索、标题、菜单、主题切换） */
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h); z-index: 9999;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; padding: 0 14px; gap: 8px;
   transition: var(--transition);
 }
-/* 阅读路径 - 固定在顶栏下方 */
+/* 第二层：阅读路径导航（①-⑧，可横向滑动切换） */
 .read-path {
   position: fixed; top: var(--topbar-h); left: 0; right: 0; z-index: 9998;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.97);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; gap: 0;
-  padding: 8px 12px;
+  padding: 7px 10px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -106,11 +108,11 @@ body {
 .read-path::-webkit-scrollbar { display: none; }
 .read-path-step {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 5px 11px;
+  padding: 5px 12px;
   background: var(--surface2);
   border: 1.5px solid var(--border);
-  border-radius: 20px;
-  font-size: 12px; color: var(--text2); cursor: pointer; transition: var(--transition);
+  border-radius: 22px;
+  font-size: 12.5px; color: var(--text2); cursor: pointer; transition: var(--transition);
   white-space: nowrap; flex-shrink: 0; user-select: none;
 }
 .read-path-step:hover {
@@ -120,21 +122,20 @@ body {
 .read-path-step.active {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white; border-color: transparent;
-  box-shadow: 0 2px 10px rgba(79,70,229,0.25);
-  transform: scale(1.04);
+  box-shadow: 0 3px 12px rgba(79,70,229,0.3);
+  transform: scale(1.06);
 }
 .read-path-step.click-anim { animation: stepClickPulse 0.4s ease; }
 @keyframes stepClickPulse {
-  0% { transform: scale(1.04); }
+  0% { transform: scale(1.06); }
   30% { transform: scale(0.96); }
-  100% { transform: scale(1.04); }
+  100% { transform: scale(1.06); }
 }
 .read-path-arrow {
   display: inline-flex; align-items: center; justify-content: center;
-  color: var(--border2); font-size: 13px; padding: 0 2px; flex-shrink: 0;
+  color: var(--border2); font-size: 14px; padding: 0 3px; flex-shrink: 0;
   transition: color 0.2s;
-  cursor: default;
-  min-width: 16px;
+  min-width: 14px;
 }
 .read-path-arrow.highlight { color: var(--primary); }
 [data-theme="dark"] .topbar { background: rgba(15,23,42,0.9); }
@@ -210,7 +211,8 @@ body {
 /* ===== 侧边导航 ===== */
 .sidebar {
   position: fixed; top: var(--topbar-h); left: 0; bottom: 0; width: var(--sidebar-w);
-  /* 阅读路径在顶栏下面，侧边栏从顶栏下面开始 - OK */
+  z-index: 9999;
+  /* 阅读路径在顶栏下面，侧边栏从顶栏下面开始 */
   background: var(--surface); border-right: 1px solid var(--border);
   z-index: 9998; overflow-y: auto; transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -245,7 +247,7 @@ body {
 
 /* ===== 主内容区 ===== */
 .main {
-  margin-left: 0; padding-top: calc(var(--topbar-h) + 52px); padding-bottom: 40px;
+  margin-left: 0; padding-top: calc(var(--topbar-h) + 40px + 6px); padding-bottom: 40px;
   transition: margin-left 0.3s;
   min-height: 100vh;
 }
@@ -254,10 +256,10 @@ body {
 .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
 /* ===== Hero ===== */
-/* Hero 区域 - 阅读路径下方开始 */
+/* Hero 区域 - 阅读路径下方 */
 .hero {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);
-  color: white; padding: 48px 24px 36px; text-align: center;
+  color: white; padding: 44px 24px 34px; text-align: center;
   position: relative; overflow: hidden; border-radius: 0 0 24px 24px;
 }
 .hero::before {
@@ -633,42 +635,76 @@ body {
   .arch-diagram { padding: 24px 20px; }
 }
 
-/* ===== 响应式 - 手机 ===== */
+/* ===== 响应式 - 手机 (≤768px) ===== */
 @media (max-width: 768px) {
-  :root { --sidebar-w: 280px; --topbar-h: 52px; }
+  :root { --sidebar-w: 280px; --topbar-h: 44px; }
   
-  .topbar { padding: 0 12px; gap: 8px; }
-  .topbar-title { font-size: 14px; }
+  .topbar { 
+    padding: 0 10px; gap: 6px; 
+    height: 44px;
+  }
+  .topbar-title { font-size: 13px; }
   .topbar-title small { display: none; }
   .search-wrap { display: none; }
   .search-input.mobile-search { display: block; }
   .search-results { width: calc(100vw - 32px); right: 16px; }
-  .theme-btn { width: 36px; height: 36px; }
+  .theme-btn { width: 34px; height: 34px; font-size: 14px; }
   
   .sidebar { top: var(--topbar-h); }
   .sidebar-overlay { top: var(--topbar-h); }
   
-  .main { margin-left: 0 !important; padding-top: calc(var(--topbar-h) + 4px); padding-bottom: 72px; }
+  /* 关键修复：main的padding-top = 顶栏44px + 阅读路径36px + 间隔6px = 86px */
+  .main { 
+    margin-left: 0 !important; 
+    padding-top: calc(44px + 36px + 6px); 
+    padding-bottom: 72px; 
+  }
   
-  .hero { padding: 36px 14px 28px; border-radius: 0 0 20px 20px; }
+  /* Hero - 阅读路径下方，不被遮挡 */
+  .hero { 
+    padding: 30px 14px 24px; 
+    border-radius: 0 0 18px 18px; 
+  }
   .hero h1 { 
-    font-size: clamp(1.25em, 5.5vw, 1.6em); 
-    line-height: 1.35; 
-    margin-bottom: 6px;
+    font-size: clamp(1.15em, 5vw, 1.4em); 
+    line-height: 1.3; 
+    margin-bottom: 5px;
     word-break: break-word;
     hyphens: auto;
   }
   .hero .subtitle { 
-    font-size: clamp(0.78em, 3.2vw, 0.9em); 
-    margin-top: 4px;
+    font-size: clamp(0.72em, 3vw, 0.82em); 
+    margin-top: 3px;
     opacity: 0.95;
   }
-  .hero .meta { gap: 6px; margin-top: 14px; }
-  .hero .meta-item { font-size: 11px; padding: 5px 10px; white-space: nowrap; }
+  .hero .meta { 
+    gap: 5px; 
+    margin-top: 10px; 
+  }
+  .hero .meta-item { 
+    font-size: 10px; 
+    padding: 4px 8px; 
+    white-space: nowrap; 
+  }
   
-  .read-path { padding: 10px 0 4px; overflow-x: auto; }
-  .read-path-step { padding: 6px 11px; font-size: 12px; }
-  .read-path-arrow { font-size: 12px; padding: 0 2px; }
+  /* 阅读路径 - 固定在顶栏下方，紧凑可横向滑动 */
+  .read-path { 
+    padding: 6px 8px;
+    height: 36px;
+    align-items: center;
+  }
+  .read-path-step { 
+    padding: 4px 9px; 
+    font-size: 11px; 
+    border-width: 1.5px;
+    gap: 3px;
+    border-radius: 18px;
+  }
+  .read-path-arrow { 
+    font-size: 12px; 
+    padding: 0 1px; 
+    min-width: 12px; 
+  }
   
   .container { padding: 0 14px; }
   .section { margin-bottom: 20px; }
@@ -799,7 +835,7 @@ body {
   .read-path { padding: 5px 6px; }
   .read-path-step { padding: 3px 7px; font-size: 10px; }
   .read-path-arrow { font-size: 11px; min-width: 10px; }
-  .main { padding-top: calc(var(--topbar-h) + 38px); }
+  .main { padding-top: 76px; }
   .hero { padding: 24px 10px 18px; }
   .hero h1 { font-size: 1.1em; }
   .hero .subtitle { font-size: 0.7em; }
@@ -836,6 +872,13 @@ body {
 
 /* ===== 平板 (769-1024px) ===== */
 @media (min-width: 769px) and (max-width: 1024px) {
+  :root { --topbar-h: 50px; }
+  .topbar { padding: 0 12px; }
+  .topbar-title { font-size: 15px; }
+  .read-path { padding: 6px 10px; height: 38px; }
+  .read-path-step { padding: 4px 10px; font-size: 12px; }
+  .main { padding-top: calc(50px + 38px + 6px); }
+  .hero { padding: 40px 20px 32px; }
   .factors-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .overview-grid { grid-template-columns: repeat(2, 1fr); }
   .insight-cards { grid-template-columns: repeat(2, 1fr); }
@@ -877,11 +920,11 @@ body {
 </div>
 
 <!-- 移动端搜索栏 -->
-<div class="mobile-search-wrap" id="mobileSearchWrap" style="display:none; position:fixed; top:calc(var(--topbar-h) + 40px); left:0; right:0; z-index:99; background:var(--surface); border-bottom:1px solid var(--border); padding:6px 12px;">
+<div class="mobile-search-wrap" id="mobileSearchWrap" style="display:none; position:fixed; top:calc(var(--topbar-h) + 38px + 4px); left:0; right:0; z-index:99; background:var(--surface); border-bottom:1px solid var(--border); padding:6px 12px;">
   <span class="search-icon" style="position:absolute; left:24px; top:50%; transform:translateY(-50%);">🔍</span>
   <input type="text" class="mobile-search-input" id="mobileSearchInput" placeholder="搜索企业、机制、关键词..." autocomplete="off" style="margin-left:28px; width:calc(100% - 28px);">
 </div>
-<div class="search-results" id="mobileSearchResults" style="position:fixed; top:calc(var(--topbar-h) + 92px); left:16px; right:16px; width:auto; max-height:400px; z-index:98;"></div>
+<div class="search-results" id="mobileSearchResults" style="position:fixed; top:calc(var(--topbar-h) + 80px); left:16px; right:16px; width:auto; max-height:400px; z-index:98;"></div>
 
 <!-- 侧边导航 -->
 <nav class="sidebar" id="sidebar"></nav>
@@ -1862,9 +1905,11 @@ function updateMobileTab(targetId) {
 
 function updateReadPath() {
   let current = 0;
+  // 移动端顶部固定栏总高约 44+36+6=86px，桌面端约 56+38+6=100px
+  const topOffset = window.innerWidth <= 768 ? 90 : 105;
   sectionIds.forEach((id, i) => {
     const el = document.getElementById(id);
-    if (el && el.getBoundingClientRect().top < 180) current = i;
+    if (el && el.getBoundingClientRect().top < topOffset) current = i;
   });
   readPathSteps.forEach((s, i) => s.classList.toggle('active', i <= current));
   // 高亮箭头
