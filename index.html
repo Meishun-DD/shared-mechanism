@@ -35,6 +35,8 @@
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --sidebar-w: 280px;
   --topbar-h: 56px;
+  /* 顶部固定栏总高度 = 顶栏 + 阅读路径，桌面端默认值 */
+  --header-total-h: 96px;
 }
 
 [data-theme="dark"] {
@@ -54,7 +56,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--topbar-h) + 40px + 10px); }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-total-h); }
 
 body {
   font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -98,7 +100,8 @@ body {
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; gap: 0;
-  padding: 7px 10px;
+  padding: 6px 10px;
+  min-height: 40px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -247,7 +250,7 @@ body {
 
 /* ===== 主内容区 ===== */
 .main {
-  margin-left: 0; padding-top: calc(var(--topbar-h) + 40px + 6px); padding-bottom: 40px;
+  margin-left: 0; padding-top: var(--header-total-h); padding-bottom: 40px;
   transition: margin-left 0.3s;
   min-height: 100vh;
 }
@@ -637,11 +640,16 @@ body {
 
 /* ===== 响应式 - 手机 (≤768px) ===== */
 @media (max-width: 768px) {
-  :root { --sidebar-w: 280px; --topbar-h: 44px; }
+  :root { 
+    --sidebar-w: 280px; 
+    --topbar-h: 44px;
+    /* 移动端顶部固定栏总高度 = 顶栏44px + 阅读路径34px = 78px */
+    --header-total-h: 78px;
+  }
   
   .topbar { 
     padding: 0 10px; gap: 6px; 
-    height: 44px;
+    min-height: 44px;
   }
   .topbar-title { font-size: 13px; }
   .topbar-title small { display: none; }
@@ -653,10 +661,9 @@ body {
   .sidebar { top: var(--topbar-h); }
   .sidebar-overlay { top: var(--topbar-h); }
   
-  /* 关键修复：main的padding-top = 顶栏44px + 阅读路径36px + 间隔6px = 86px */
   .main { 
     margin-left: 0 !important; 
-    padding-top: calc(44px + 36px + 6px); 
+    padding-top: var(--header-total-h);
     padding-bottom: 72px; 
   }
   
@@ -687,11 +694,11 @@ body {
     white-space: nowrap; 
   }
   
-  /* 阅读路径 - 固定在顶栏下方，紧凑可横向滑动 */
+  /* 阅读路径 - 固定在顶栏下方，紧凑可横向滑动（不设固定高度，由内容撑开） */
   .read-path { 
-    padding: 6px 8px;
-    height: 36px;
+    padding: 5px 8px;
     align-items: center;
+    min-height: 34px;
   }
   .read-path-step { 
     padding: 4px 9px; 
@@ -872,12 +879,15 @@ body {
 
 /* ===== 平板 (769-1024px) ===== */
 @media (min-width: 769px) and (max-width: 1024px) {
-  :root { --topbar-h: 50px; }
+  :root { 
+    --topbar-h: 50px;
+    --header-total-h: 88px;
+  }
   .topbar { padding: 0 12px; }
   .topbar-title { font-size: 15px; }
-  .read-path { padding: 6px 10px; height: 38px; }
+  .read-path { padding: 6px 10px; min-height: 38px; }
   .read-path-step { padding: 4px 10px; font-size: 12px; }
-  .main { padding-top: calc(50px + 38px + 6px); }
+  .main { padding-top: var(--header-total-h); }
   .hero { padding: 40px 20px 32px; }
   .factors-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .overview-grid { grid-template-columns: repeat(2, 1fr); }
@@ -920,11 +930,11 @@ body {
 </div>
 
 <!-- 移动端搜索栏 -->
-<div class="mobile-search-wrap" id="mobileSearchWrap" style="display:none; position:fixed; top:calc(var(--topbar-h) + 38px + 4px); left:0; right:0; z-index:99; background:var(--surface); border-bottom:1px solid var(--border); padding:6px 12px;">
+<div class="mobile-search-wrap" id="mobileSearchWrap" style="display:none; position:fixed; top:var(--header-total-h); left:0; right:0; z-index:99; background:var(--surface); border-bottom:1px solid var(--border); padding:6px 12px;">
   <span class="search-icon" style="position:absolute; left:24px; top:50%; transform:translateY(-50%);">🔍</span>
   <input type="text" class="mobile-search-input" id="mobileSearchInput" placeholder="搜索企业、机制、关键词..." autocomplete="off" style="margin-left:28px; width:calc(100% - 28px);">
 </div>
-<div class="search-results" id="mobileSearchResults" style="position:fixed; top:calc(var(--topbar-h) + 80px); left:16px; right:16px; width:auto; max-height:400px; z-index:98;"></div>
+<div class="search-results" id="mobileSearchResults" style="position:fixed; top:calc(var(--header-total-h) + 36px); left:16px; right:16px; width:auto; max-height:400px; z-index:98;"></div>
 
 <!-- 侧边导航 -->
 <nav class="sidebar" id="sidebar"></nav>
